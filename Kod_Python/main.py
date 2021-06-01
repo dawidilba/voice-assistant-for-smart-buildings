@@ -39,34 +39,4 @@ for phrase in speech:
 #     print("Sphinx error; {0}".format(e))
 
 
-# RATE = 16000 # max sample rate of respeaker is 48kHz, for speech recognition 16kHz is sufficient
-# CHANNELS = 2 # streo
-# BITS_WIDTH = 2 # sample bits width 
-# CHUNK = 1024
-# REASPEAKER_ID = 0
 
-
-# def record(time):
-#     pyAudio = pyaudio.PyAudio()
-#     stream = pyAudio.open(rate=RATE, format=pyAudio.get_format_from_width(BITS_WIDTH), channels=CHANNELS, input=True, input_device_index=REASPEAKER_ID)
-#     data = []
-#     for i in range(0, int(RATE/CHUNK * time)):
-#         ledsTurnOn(i)
-#         ledsTurnOnEnd(i)
-#         val = stream.read(CHUNK)
-#         data.append(val)
-#     stream.stop_stream()
-#     stream.close()
-#     pyAudio.terminate()
-#     return data
-
-# def save(fileName, time):
-#     w = wave.open(fileName + ".wav", 'wb')
-#     w.setframerate(RATE)
-#     w.setnchannels(CHANNELS)
-#     w.setsampwidth(BITS_WIDTH)
-#     w.writeframes(b''.join(record(time)))
-#     w.close()
-
-# save("output", 3)
-# os.system("aplay -Dhw:2,0 output.wav")
