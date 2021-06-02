@@ -1,4 +1,11 @@
+#!/usr/bin/python3
 from pocketsphinx import LiveSpeech
+from rpi_lcd import LCD
+import board
+import adafruit_dht
+
+lcd = LCD()
+dhtDevice = adafruit_dht.DHT22(board.D13)
 
 speech = LiveSpeech(
     verbose=False,
@@ -7,8 +14,26 @@ speech = LiveSpeech(
     no_search=False,
     full_utt=False,
 )
+
+def viewSensorInfoOnLCD():
+    try:
+        temperature_c = dhtDevice.temperature
+        humidity = dhtDevice.humidity
+    except:
+        temperature_c = 0
+        humidity = 0
+
+    lcd.text("Temp: {:.1f} C".format(temperature_c), 1)
+    lcd.text("Humidity: {}% ".format(humidity), 2)
+
+
 for phrase in speech:
     print(phrase)
+    if(phrase == "temperature"):
+        viewSensorInfoOnLCD()
+    else:
+        lcd.clear()
+        
 
 
 # import wave
