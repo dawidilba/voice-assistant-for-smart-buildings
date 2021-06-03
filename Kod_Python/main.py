@@ -1,39 +1,83 @@
 #!/usr/bin/python3
 from pocketsphinx import LiveSpeech
 from rpi_lcd import LCD
+import RPi.GPIO as GPIO
 import board
 import adafruit_dht
+import apa102
 
-lcd = LCD()
-dhtDevice = adafruit_dht.DHT22(board.D13)
-
-speech = LiveSpeech(
-    verbose=False,
-    sampling_rate=16000,
-    buffer_size=2048,
-    no_search=False,
-    full_utt=False,
-)
-
-def viewSensorInfoOnLCD():
-    try:
-        temperature_c = dhtDevice.temperature
-        humidity = dhtDevice.humidity
-    except:
-        temperature_c = 0
-        humidity = 0
-
-    lcd.text("Temp: {:.1f} C".format(temperature_c), 1)
-    lcd.text("Humidity: {}% ".format(humidity), 2)
-
-
-for phrase in speech:
-    print(phrase)
-    if(phrase == "temperature"):
-        viewSensorInfoOnLCD()
-    else:
-        lcd.clear()
+class VoiceAssistant:
+    def __init__(self):
+        self.lcd = LCD()
+        self.dht = adafruit_dht.DHT22(board.D13, use_pulseio=False)
+        self.leds = apa102.APA102(num_led=3, global_brightness=0b1)
+        self.speech = LiveSpeech(
+            verbose=False,
+            sampling_rate=16000,
+            buffer_size=2048,
+            no_search=False,
+            full_utt=False,
+            )
+        self.temp = 0
+        self.humidity = 0
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(12, GPIO.OUT)
         
+
+    def __del__(self):
+        GPIO.cleanup()
+
+    def turnOnLed(self):
+        GPIO.output(12, GPIO.HIGH)
+    
+    def turnOffLed(self):
+        GPIO.output(12, GPIO.LOW)
+
+    def turnOnRespeakerLeds(self, color = [72,61,139]):
+        for x in range(3):
+            self.leds.set_pixel(x, color[0], color[1], color[2])
+            self.leds.show()
+
+    def turnOffReaspeakerLeds(self):
+        self.leds.clear_strip()
+
+    def viewSensorInfoOnLcd(self):
+        self.lcd.clear()
+        try:
+            self.temp = self.dht.temperature
+            self.humidity = self.dht.humidity
+        except RuntimeError as err:
+            print(err.args[0])
+        except Exception as err:
+            self.dht.exit()
+            raise err
+        self.lcd.text("Temp: {:.1f} C".format(self.temp), 1)
+        self.lcd.text("Humidity: {}% ".format(self.humidity), 2)
+        # print("Temp: {:.1f} C Humidity: {}% ".format(self.temp, self.humidity))
+    
+    def action(self, words):
+        if("show" and "temperature"):
+            self.viewSensorInfoOnLcd()
+        if("the" and "lights" and "on"):
+            self.turnOnLed()
+            self.turnOnRespeakerLeds()
+            print("done")
+        if("the" and "lights" and "off"):
+            self.turnOffLed()
+            self.turnOffReaspeakerLeds()
+        return 1
+
+    def startRecognition(self):
+        for phrase in self.speech:
+            print(phrase)
+            if self.action(phrase) == -1:
+                break
+    
+va = VoiceAssistant()
+va.viewSensorInfoOnLcd()
+va.turnOnLed()
+va.startRecognition()
+
 
 
 # import wave
