@@ -38,44 +38,46 @@ class VoiceAssistant:
             self.leds.set_pixel(x, color[0], color[1], color[2])
             self.leds.show()
 
-    def turnOffReaspeakerLeds(self):
+    def turnOffRespeakerLeds(self):
         self.leds.clear_strip()
 
     def viewSensorInfoOnLcd(self):
         self.lcd.clear()
-        try:
-            self.temp = self.dht.temperature
-            self.humidity = self.dht.humidity
-        except RuntimeError as err:
-            print(err.args[0])
-        except Exception as err:
-            self.dht.exit()
-            raise err
+        result = None
+        while result is None:
+            try:
+                self.temp = self.dht.temperature
+                self.humidity = self.dht.humidity
+            except:
+                pass
         self.lcd.text("Temp: {:.1f} C".format(self.temp), 1)
         self.lcd.text("Humidity: {}% ".format(self.humidity), 2)
         # print("Temp: {:.1f} C Humidity: {}% ".format(self.temp, self.humidity))
     
     def action(self, words):
-        if("show" and "temperature"):
+        if("show temperature"):
             self.viewSensorInfoOnLcd()
-        if("the" and "lights" and "on"):
+        if("lights on"):
             self.turnOnLed()
             self.turnOnRespeakerLeds()
             print("done")
-        if("the" and "lights" and "off"):
+        if("lights off"):
             self.turnOffLed()
-            self.turnOffReaspeakerLeds()
-        return 1
+            self.turnOffRespeakerLeds()
+        if("light color to red"):
+            self.turnOnRespeakerLeds(color=[255,0,0])
+        if("light color to green"):
+            self.turnOnRespeakerLeds(color=[0,255,0])
+        if("light color to blue"):
+            self.turnOnRespeakerLeds(color=[0,0,255]) 
 
     def startRecognition(self):
         for phrase in self.speech:
+            self.lcd.clear()
             print(phrase)
-            if self.action(phrase) == -1:
-                break
+            self.action(phrase)
     
 va = VoiceAssistant()
-va.viewSensorInfoOnLcd()
-va.turnOnLed()
 va.startRecognition()
 
 
