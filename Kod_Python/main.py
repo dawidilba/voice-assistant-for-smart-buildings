@@ -14,7 +14,7 @@ class VoiceAssistant:
         self.speech = LiveSpeech(
             kws = '/home/pi/voice-assistant-for-smart-buildings/Kod_Python/key.list',
             lm=False,
-            verbose=True,
+            verbose=True, # true
             sampling_rate=16000,
             buffer_size=1048,
             no_search=False,
@@ -95,7 +95,6 @@ va = VoiceAssistant()
 va.startRecognition()
 
 
-
 # import wave
 # import os
 # import pyaudio 
@@ -111,10 +110,11 @@ va.startRecognition()
 # r = sr.Recognizer()
 # with sr.Microphone() as source:
 #     print("Say something!")
-#     audio = r.record(source, 3)
+#     audio = r.record(source, 15)
 # print("stop")
 
 # print(r.recognize_google(audio))
+
 # recognize speech using Sphinx
 # try:
 #     print(r.recognize_sphinx(audio))

@@ -1,10 +1,14 @@
-lights /1e-10/
+lights /1e-1/
 on /1e-1/
 off /1e-1/
-lamp /1e-10/
-show temperature /1e-10/
-show humidity /1e-10/
-set light color /1e-10/
-to red /1e-10/
-to green /1e-10/
-to blue /1e-10/
+lamp /1e-1/
+show /1e-1/
+temperature /1e-1/
+humidity /1e-1/
+set /1e-1/
+light /1e-1/
+color /1e-1/
+to /1e-1/ 
+red /1e-1/
+green /1e-1/
+blue /1e-1/
