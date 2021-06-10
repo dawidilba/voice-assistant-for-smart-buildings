@@ -1,2 +1,3 @@
 # voice-assistant-for-smart-buildings
-Voice assistant on raspberry Pi
+Asystent głosowy to narzędzie, które jest w stanie wykonać określone czynności poprzez wypowiedzenie odpowiedniej komendy. Jest w stanie znacznie ułatwić życie, poprawić komfort i wygodę życia, a także zaoszczędzić czas. Szczegółowy opis naszego projektu znajduje się w pliku "Asystent_glosowy_dokumentacja.pdf". Podczas tworzenia projektu wykorzystaliśmy metodologię SCRUM, której szczegóły znajdują się w pliku "SCRUM.xls".
+#### Film przedstawiający działanie projektu : [Kliknij tutaj](https://www.youtube.com/watch?v=_gPBFD0bUVg)
